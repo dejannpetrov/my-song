@@ -1,18 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Play Song</title>
+  <meta charset="UTF-8">
+  <title>Our Wedding</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f8f5f2;
+      color: #333;
+      text-align: center;
+    }
+
+    .container {
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .date {
+      font-size: 18px;
+      margin-bottom: 30px;
+      color: #777;
+    }
+
+    .cover {
+      max-width: 320px;
+      width: 90%;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .audio-player {
+      margin-top: 20px;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
 </head>
-<body style="text-align:center; margin-top:50px;">
-  <h1>Tap to Play</h1>
+<body>
 
-  <audio id="audio">
-    <source src="song.mp3" type="audio/mpeg">
-  </audio>
+  <div class="container">
+    <h1>Emma & Daniel</h1>
+    <div class="date">June 12, 2026</div>
 
-  <button style="font-size:30px; padding:20px;"
-    onclick="document.getElementById('audio').play()">
-    ▶ PLAY
-  </button>
+    <!-- Cover Image -->
+    <img src="cover.jpg" alt="Wedding Cover" class="cover">
+
+    <!-- Audio -->
+    <div class="audio-player">
+      <audio controls autoplay loop>
+        <source src="song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+
+    <footer>
+      We can't wait to celebrate with you ❤️
+    </footer>
+  </div>
+
 </body>
 </html>
