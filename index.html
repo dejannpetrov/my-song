@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Risto & Anastasia</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Allura&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -14,87 +14,87 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Playfair Display', serif;
-    background: #000;
-    color: white;
+html, body {
+    height: 100%;
+    background: black;
     overflow: hidden;
 }
 
+/* FULL SCREEN FIX */
 .container {
-    position: relative;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
     height: 100vh;
-    width: 100%;
 }
 
-/* COVER IMAGE */
+/* IMAGE FIX (CENTERED PROPERLY) */
 .cover {
     position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    filter: brightness(0.7);
-}
-
-/* OVERLAY CONTENT */
-.overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-
-    padding: 20px;
-}
-
-/* TEXT */
-.names {
-    font-family: 'Great Vibes', cursive;
-    font-size: 42px;
-    margin-bottom: 10px;
-}
-
-.date {
-    font-size: 16px;
-    letter-spacing: 2px;
-    margin-bottom: 30px;
-}
-
-/* BUTTON */
-button {
-    padding: 12px 28px;
-    border: none;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.9);
-    color: black;
-    font-size: 16px;
-    cursor: pointer;
-    backdrop-filter: blur(5px);
-    transition: 0.3s;
-}
-
-button:hover {
-    background: white;
+    object-position: center center; /* KEY FIX */
+    transform: scale(1.02); /* slight zoom to avoid edge gaps */
+    filter: brightness(0.72);
 }
 
 /* PARTICLES */
 canvas {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
 }
 
-/* RESPONSIVE */
-@media (max-width: 430px) {
+/* CONTENT */
+.overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+/* NAME STYLE FIX */
+.names {
+    font-family: 'Allura', cursive;
+    font-size: 52px;
+    color: white;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+    letter-spacing: 1px;
+}
+
+.date {
+    font-family: 'Playfair Display', serif;
+    margin-top: 10px;
+    font-size: 15px;
+    letter-spacing: 3px;
+    opacity: 0.9;
+}
+
+/* BUTTON */
+button {
+    margin-top: 25px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    background: rgba(255,255,255,0.92);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* MOBILE FIX */
+@media (max-width: 500px) {
     .names {
-        font-size: 34px;
-    }
-    .date {
-        font-size: 14px;
+        font-size: 42px;
     }
 }
 </style>
@@ -103,60 +103,63 @@ canvas {
 <body>
 
 <div class="container">
-    <!-- CHANGE IMAGE HERE -->
-    <img src="1-1129.jpg" class="cover">
+
+    <!-- YOUR IMAGE -->
+    <img class="cover" src="cover.jpg" alt="wedding">
 
     <canvas id="particles"></canvas>
 
     <div class="overlay">
         <div class="names">Risto & Anastasia</div>
         <div class="date">August 03, 2024</div>
-
-        <button id="musicBtn">Play Music</button>
+        <button id="btn">Play Music</button>
     </div>
+
 </div>
 
-<!-- CHANGE SONG HERE -->
 <audio id="music" src="song.mp3"></audio>
 
 <script>
-const btn = document.getElementById("musicBtn");
+const btn = document.getElementById("btn");
 const music = document.getElementById("music");
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
 let playing = false;
 
-/* CREATE PARTICLES */
-function createParticles() {
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+/* PARTICLES */
+let particles = [];
+
+function init() {
     particles = [];
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 70; i++) {
         particles.push({
             x: Math.random() * canvas.width,
-            y: canvas.height + Math.random() * 200,
-            size: Math.random() * 2,
-            speed: Math.random() * 1 + 0.5
+            y: Math.random() * canvas.height,
+            speed: Math.random() * 0.6 + 0.2,
+            size: Math.random() * 2
         });
     }
 }
+init();
 
-/* DRAW */
-function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     ctx.fillStyle = "white";
 
     particles.forEach(p => {
+
         if (playing) {
             p.y -= p.speed;
-            if (p.y < 0) {
-                p.y = canvas.height;
-                p.x = Math.random() * canvas.width;
-            }
+            if (p.y < 0) p.y = canvas.height;
         }
 
         ctx.beginPath();
@@ -164,14 +167,12 @@ function drawParticles() {
         ctx.fill();
     });
 
-    requestAnimationFrame(drawParticles);
+    requestAnimationFrame(draw);
 }
+draw();
 
-createParticles();
-drawParticles();
-
-/* BUTTON LOGIC */
-btn.addEventListener("click", () => {
+/* MUSIC CONTROL */
+btn.onclick = () => {
     if (!playing) {
         music.play();
         playing = true;
@@ -181,14 +182,7 @@ btn.addEventListener("click", () => {
         playing = false;
         btn.textContent = "Play Music";
     }
-});
-
-/* RESIZE FIX */
-window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    createParticles();
-});
+};
 </script>
 
 </body>
