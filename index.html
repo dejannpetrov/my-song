@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Risto & Anastasia</title>
 
-  <!-- Premium elegant fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
@@ -28,17 +27,18 @@
       position:relative;
     }
 
+    /* FIX: lighter overlay so image is visible */
     .overlay {
       position:absolute;
       inset:0;
-      background:linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2));
+      background:rgba(0,0,0,0.35);
     }
 
     .hero-content {
       position:relative;
       z-index:2;
-      animation:fadeIn 2s ease;
       padding:20px;
+      /* removed animation so text stays fixed */
     }
 
     h1 {
@@ -62,21 +62,18 @@
       border:1px solid rgba(255,255,255,0.6);
       background:transparent;
       color:#fff;
-      font-weight:400;
       letter-spacing:2px;
       border-radius:40px;
       cursor:pointer;
       backdrop-filter: blur(6px);
-      transition:0.4s ease;
+      transition:0.3s ease;
     }
 
     .play-btn:hover {
       background:white;
       color:black;
-      transform:translateY(-2px);
     }
 
-    /* Minimal NFC-style player */
     .player {
       position:fixed;
       bottom:15px;
@@ -84,13 +81,12 @@
       transform:translateX(-50%);
       width:85%;
       max-width:360px;
-      background:rgba(0,0,0,0.6);
+      background:rgba(0,0,0,0.5);
       border:1px solid rgba(255,255,255,0.2);
       border-radius:12px;
       padding:10px;
       display:none;
       align-items:center;
-      gap:10px;
       backdrop-filter:blur(10px);
     }
 
@@ -106,10 +102,9 @@
       height:100%;
       width:0%;
       background:white;
-      transition:width 0.2s linear;
     }
 
-    /* Floating subtle particles (more premium than hearts) */
+    /* particles only thing moving */
     .particle {
       position:absolute;
       bottom:-10px;
@@ -126,11 +121,6 @@
       100% { transform:translateY(-100vh); opacity:0; }
     }
 
-    @keyframes fadeIn {
-      from { opacity:0; transform:translateY(20px);} 
-      to { opacity:1; transform:translateY(0);} 
-    }
-
     @media(max-width:600px){
       h1 { font-size:2.8rem; }
     }
@@ -144,7 +134,7 @@
   <div class="hero-content">
     <h1>Risto & Anastasia</h1>
     <div class="date">August 03, 2024</div>
-    <button class="play-btn" onclick="startMusic()">Play</button>
+    <button class="play-btn" onclick="toggleMusic()" id="playBtn">Play</button>
   </div>
 </section>
 
@@ -160,10 +150,21 @@
   const audio = document.getElementById('audio');
   const player = document.getElementById('player');
   const progressBar = document.getElementById('progressBar');
+  const playBtn = document.getElementById('playBtn');
 
-  function startMusic() {
-    audio.play();
-    player.style.display = 'flex';
+  let isPlaying = false;
+
+  function toggleMusic() {
+    if (!isPlaying) {
+      audio.play();
+      player.style.display = 'flex';
+      playBtn.innerText = 'Stop';
+      isPlaying = true;
+    } else {
+      audio.pause();
+      playBtn.innerText = 'Play';
+      isPlaying = false;
+    }
   }
 
   audio.addEventListener('timeupdate', () => {
@@ -171,7 +172,7 @@
     progressBar.style.width = percent + '%';
   });
 
-  // subtle particles (classy effect for NFC reveal)
+  // particles
   setInterval(() => {
     const p = document.createElement('div');
     p.classList.add('particle');
